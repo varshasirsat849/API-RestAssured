@@ -2,12 +2,21 @@ package com.restassured.testcases;
 
 import static io.restassured.RestAssured.*;
 import org.hamcrest.Matchers;
+import org.jetbrains.annotations.TestOnly;
 import org.testng.annotations.Test;
+
+import com.requestObjectModel.GetUsersRequestSpec;
+
+import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
+import io.restassured.response.Response;
+import io.restassured.specification.RequestSpecification;
 
 import static org.testng.Assert.assertEquals;
 
 public class GetUsers {
 
+	GetUsersRequestSpec spec=new GetUsersRequestSpec();
 	@Test
 	public static void verifyResponseCodeForGetAllUsersWithValidMethodNameAndEndpoint() {
 		given()
@@ -49,7 +58,7 @@ public class GetUsers {
 
 	@Test
 	public static void verifyEntireResponseForGetAllUsersWithValidMethodNameAndEndpoint() {
-		String expectedResponseSinlgeObject = "[\n" + "  {\n" + "    \"id\": 1,\n" + "    \"userName\": \"User 1\",\n"
+		String expectedEntireResponse = "[\n" + "  {\n" + "    \"id\": 1,\n" + "    \"userName\": \"User 1\",\n"
 				+ "    \"password\": \"Password1\"\n" + "  },\n" + "  {\n" + "    \"id\": 2,\n"
 				+ "    \"userName\": \"User 2\",\n" + "    \"password\": \"Password2\"\n" + "  },\n" + "  {\n"
 				+ "    \"id\": 3,\n" + "    \"userName\": \"User 3\",\n" + "    \"password\": \"Password3\"\n"
@@ -69,9 +78,9 @@ public class GetUsers {
 				.get("https://fakerestapi.azurewebsites.net/api/v1/Users").then()
 				.statusCode(200)
 				.extract().asString();
-		expectedResponseSinlgeObject = removeWhitespace(expectedResponseSinlgeObject);
+		expectedEntireResponse = removeWhitespace(expectedEntireResponse);
 		actualResponse = removeWhitespace(actualResponse);
-		assertEquals(expectedResponseSinlgeObject, actualResponse);
+		assertEquals(expectedEntireResponse, actualResponse);
 	}
 
 	@Test
@@ -104,5 +113,60 @@ public class GetUsers {
 		expectedResponseSinlgeObject = removeWhitespace(expectedResponseSinlgeObject);
 		actualResponse = removeWhitespace(actualResponse);
 		assertEquals(expectedResponseSinlgeObject, actualResponse);
+	}
+	
+	@Test
+	public void VerifyGetUsersWithInvalidUserId() {
+		given()
+		.when()
+		.get("https://fakerestapi.azurewebsites.net/api/v1/Users/1236")
+		.then()
+		.log().all()
+		.assertThat()
+		.statusCode(404);
+	}
+	@Test
+	public void VerifyUsersWithInvaliformatOfUserId() {
+		given()
+		.when()
+		.get("https://fakerestapi.azurewebsites.net/api/v1/CoverPhotos/<44123>")
+		.then()
+		.log().all()
+		.statusCode(400);
+	}
+	
+	@Test
+	public void VerifyUsersWithNegativeUserId() {
+		given()
+		.when()
+		.get("https://fakerestapi.azurewebsites.net/api/v1/Users/-12355")
+		.then()
+		.statusCode(404);
+	}
+	
+	@Test
+	public void VerifyUsersHavingContentTypeJSON() {
+		given()
+		.when()
+		.get("https://fakerestapi.azurewebsites.net/api/v1/Users/1")
+		.then()
+		.statusCode(200)
+		.contentType(ContentType.JSON);
+	}
+	@Test
+	public void verifyGetAllUsersWithRequestSpecification(){
+		RequestSpecification request = RestAssured.given()
+                .baseUri("https://fakerestapi.azurewebsites.net/api/v1")
+                .pathParam("userid", "1");
+
+      Response response = request.get("/Users/{userid}");
+      System.out.println(response.statusCode());
+	}
+	
+	@Test
+	public void verifyGetUserUsingReqSpec(){
+		given(spec.getUsers())
+		.get()
+		.then().log().all();
 	}
 }
