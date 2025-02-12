@@ -2,7 +2,6 @@ package com.restassured.testcases;
 
 import static io.restassured.RestAssured.*;
 import org.hamcrest.Matchers;
-import org.jetbrains.annotations.TestOnly;
 import org.testng.annotations.Test;
 
 import com.requestObjectModel.GetUsersRequestSpec;
