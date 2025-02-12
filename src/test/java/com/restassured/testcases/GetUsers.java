@@ -10,11 +10,10 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
-
+import org.testng.annotations.Test;
 import static org.testng.Assert.assertEquals;
 
 public class GetUsers {
-
 	GetUsersRequestSpec spec=new GetUsersRequestSpec();
 	@Test
 	public static void verifyResponseCodeForGetAllUsersWithValidMethodNameAndEndpoint() {
@@ -57,7 +56,10 @@ public class GetUsers {
 
 	@Test
 	public static void verifyEntireResponseForGetAllUsersWithValidMethodNameAndEndpoint() {
+
 		String expectedEntireResponse = "[\n" + "  {\n" + "    \"id\": 1,\n" + "    \"userName\": \"User 1\",\n"
+
+		String expectedResponseSinlgeObject = "[\n" + "  {\n" + "    \"id\": 1,\n" + "    \"userName\": \"User 1\",\n"
 				+ "    \"password\": \"Password1\"\n" + "  },\n" + "  {\n" + "    \"id\": 2,\n"
 				+ "    \"userName\": \"User 2\",\n" + "    \"password\": \"Password2\"\n" + "  },\n" + "  {\n"
 				+ "    \"id\": 3,\n" + "    \"userName\": \"User 3\",\n" + "    \"password\": \"Password3\"\n"
@@ -80,6 +82,9 @@ public class GetUsers {
 		expectedEntireResponse = removeWhitespace(expectedEntireResponse);
 		actualResponse = removeWhitespace(actualResponse);
 		assertEquals(expectedEntireResponse, actualResponse);
+		expectedResponseSinlgeObject = removeWhitespace(expectedResponseSinlgeObject);
+		actualResponse = removeWhitespace(actualResponse);
+		assertEquals(expectedResponseSinlgeObject, actualResponse);
 	}
 
 	@Test
@@ -113,7 +118,7 @@ public class GetUsers {
 		actualResponse = removeWhitespace(actualResponse);
 		assertEquals(expectedResponseSinlgeObject, actualResponse);
 	}
-	
+
 	@Test
 	public void VerifyGetUsersWithInvalidUserId() {
 		given()
@@ -168,4 +173,5 @@ public class GetUsers {
 		.get()
 		.then().log().all();
 	}
+
 }
