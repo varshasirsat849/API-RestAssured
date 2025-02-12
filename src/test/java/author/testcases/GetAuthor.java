@@ -1,4 +1,4 @@
-package com.restassured.testcases;
+package author.testcases;
 import static io.restassured.RestAssured.given;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;

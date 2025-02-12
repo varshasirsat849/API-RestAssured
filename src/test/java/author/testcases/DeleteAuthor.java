@@ -1,4 +1,4 @@
-package com.restassured.testcases;
+package author.testcases;
 import static io.restassured.RestAssured.given;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;

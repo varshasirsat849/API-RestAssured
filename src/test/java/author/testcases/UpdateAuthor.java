@@ -1,4 +1,4 @@
-package com.restassured.testcases;
+package author.testcases;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.greaterThan;
 import org.hamcrest.Matchers;

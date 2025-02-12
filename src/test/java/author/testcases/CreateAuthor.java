@@ -1,5 +1,6 @@
-package com.restassured.testcases;
+package author.testcases;
 import static io.restassured.RestAssured.given;
+
 import static org.hamcrest.Matchers.greaterThan;
 import java.io.File;
 import java.io.FileInputStream;
@@ -20,7 +21,8 @@ public class CreateAuthor {
 	@Test
     public void createAuthourUsingExtenalJsonFile() throws Exception {
 		// Load the external JSON file from the specified path
-		File f = new File("C:\\Users\\User\\eclipse-workspace\\API_RestAssured\\API-RestAssured\\src\\test\\resources\\requestPayload\\createAuthorRequestbody.json");
+		
+		File f = new File(System.getProperty("user.dir")+ "\\src\\test\\resources\\requestPayload\\createAuthorRequestbody.json");
 		// Open a file input stream to read the content of the file
 		FileInputStream fileInputStream = new FileInputStream(f);
 		// Create a JSONTokener object that parses the JSON content from the file input stream
@@ -80,7 +82,12 @@ public class CreateAuthor {
 		given().when()
 				.body("{\r\n" + "  \"id\": 11,\r\n" + "  \"idBook\": 100,\r\n" + "  \"firstName\": \"Book1\",\r\n"
 						+ "  \"lastName\": \"Book2\"\r\n" + "}")
-				.contentType(ContentType.JSON).post("/Authors").then().log().all().assertThat().statusCode(200);
+				.contentType(ContentType.JSON).post("/Authors")
+				.then()
+				.log()
+				.all()
+				.assertThat()
+				.statusCode(200);
 
 	}
 
