@@ -1,48 +1,103 @@
 package author.testcases;
 import static io.restassured.RestAssured.given;
+
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 import static org.hamcrest.Matchers.*;
 import org.hamcrest.Matchers;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+
+import com.requestObjectModel.AuthorRequestSpec;
+import com.requestObjectModel.UserRequestSpec;
+
 import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 
 public class GetAuthor {
+
 	@BeforeClass
 	public void setup() {
 		RestAssured.baseURI = "https://fakerestapi.azurewebsites.net/api/v1";
 	}
 
+	
+	@Test
+	public void verifyGetAuthorUsingReqSpec(){
+		AuthorRequestSpec spec=new AuthorRequestSpec();
+		given(spec.getAuthor())
+		.get("/10")
+		.then()
+		.statusCode(200)
+		.log().body();
+	}
+	
+
+	@Test
+	public void verifyHeadercontentUsingReqSpec() {
+		AuthorRequestSpec spec=new AuthorRequestSpec();
+		given(spec.getAuthor())
+		.then()
+		.log()
+		.headers()
+	    .header("Content-Type", "application/json; charset=utf-8; v=1.0")
+        .header("Transfer-Encoding", "chunked")
+	    .header("Server", "Kestrel");
+	}
+	
+	
 	@Test
 	public void verifyTheAPIReturn200StatusCode() {
-		given().when().get("/Authors").then().statusCode(200).log().status();
+		given()
+		.when()
+		.get("/Authors")
+		.then()
+		.statusCode(200)
+		.log()
+		.status();
 
 	}
 
 	@Test
 	public void verifyHeadercontent() {
-		given().when().get("/Authors").then().log().headers()
-				.header("Content-Type", "application/json; charset=utf-8; v=1.0").header("Transfer-Encoding", "chunked")
-				.header("Server", "Kestrel");
+		given().when().get("/Authors")
+		.then()
+		.log()
+		.headers()
+	    .header("Content-Type", "application/json; charset=utf-8; v=1.0")
+        .header("Transfer-Encoding", "chunked")
+	    .header("Server", "Kestrel");
 	}
 
 	@Test
 	public static void verifyInvalidEndpointReturns404() {
-		given().when().get("/Authors888").then().statusCode(404).log().all();
+		given()
+		.when()
+		.get("/Authors888")
+		.then()
+		.statusCode(404)
+		.log().all();
 	}
 
 	@Test
 	public void verifyTheAPIReturnsListOfAuthorsSuccessfully() {
-		given().when().get("/Authors").then().statusCode(200).body("size()", greaterThan(0)).log().body();
+		given()
+		.when()
+		.get("/Authors")
+		.then().statusCode(200)
+		.body("size()", greaterThan(0))
+		.log().body();
 	}
 
 	@Test
 	public void verifyCorrectIdFirstnameFromResponse() {
 		// to print Response on console
-		Response response = given().when().get("/Authors").then().statusCode(200)
+		Response response = given()
+				.when()
+				.get("/Authors")
+				.then().
+				 statusCode(200)
 				.body("[0].firstName", Matchers.equalTo("First Name 1")).extract().response();
 		// Extract firstName using JsonPath
 		JsonPath jsonPath = response.jsonPath();

@@ -2,6 +2,10 @@ package author.testcases;
 import static io.restassured.RestAssured.given;
 
 import static org.hamcrest.Matchers.greaterThan;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
+
 import java.io.File;
 import java.io.FileInputStream;
 import org.hamcrest.Matchers;
@@ -9,8 +13,15 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+
+import com.requestObjectModel.AuthorRequestSpec;
+import com.requestObjectModel.CreateAuthorRequestByPOJO;
+import com.requestObjectModel.CreateUserRequestPOJO;
+import com.requestObjectModel.UserRequestSpec;
+
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import io.restassured.response.Response;
 
 public class CreateAuthor {
 	@BeforeClass
@@ -59,7 +70,60 @@ public class CreateAuthor {
             .assertThat()
             .statusCode(200); 
     }
-
+   
+	@Test
+	public void CreateAuthorUsingPOJOClass() {
+		CreateAuthorRequestByPOJO reuestDataPOJO=new CreateAuthorRequestByPOJO();
+		reuestDataPOJO.setId(14);
+		reuestDataPOJO.setIdBook("100");
+		reuestDataPOJO.setFirstName("MyBOOK");
+		reuestDataPOJO.setLastName("MindSet");
+		given()
+		  .contentType(ContentType.JSON)
+		  .body(reuestDataPOJO)
+		.when()
+		.post("/Authors")
+		.then()
+		.statusCode(200)
+		.header("Content-Type", "application/json; charset=utf-8; v=1.0")
+		.log().all();
+	}
+	
+	@Test
+	public void createAuthorUsingRequestSpec() {
+		AuthorRequestSpec spec=new AuthorRequestSpec();
+		Response response = given()
+                .spec(spec.createAuthor()) 
+                .contentType(ContentType.JSON)
+                .when()
+                .post()
+                .then()
+                .statusCode(200)
+                .log().body()
+                .extract().response();
+		 assertEquals(200, response.getStatusCode(), "Expected status code is 200");
+	     assertNotNull(response.getBody().asString(), "Response body should not be null");
+	     assertTrue(response.getBody().asString().contains("John"), "Response should contain 'John'");
+	}
+	
+	@Test
+	public void createAuthorDynamicallyUsingRequestSpec() {
+		AuthorRequestSpec spec=new AuthorRequestSpec();
+		Response response = given()
+                .spec(spec.createAuthorDyanmically(12, 100, "API", "Book")) 
+                .contentType(ContentType.JSON)
+                .when()
+                .post()
+                .then()
+                .statusCode(200)
+                .log().body()
+                .extract().response();
+		 assertEquals(200, response.getStatusCode(), "Expected status code is 200");
+	     assertNotNull(response.getBody().asString(), "Response body should not be null");
+	     assertTrue(response.getBody().asString().contains("API"), "Response should contain 'John'");
+	}
+	
+	
 	@Test
 	public void verifyCreateAuthorWithValidData() {
 		given().when()
