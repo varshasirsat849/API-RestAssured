@@ -210,6 +210,7 @@ import com.requestObjectModel.CoverphotosRequestSpec;
 					.get("https://fakerestapi.azurewebsites.net/api/v1/CoverPhotos").then()
 					.statusCode(200)
 					.extract().asString();
+			System.out.println(actualEntireResponse);
 			assertEquals(expectedEntireResponse, actualEntireResponse);
 			
 		}

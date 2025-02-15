@@ -3,8 +3,7 @@ package user.testcases;
 import static io.restassured.RestAssured.*;
 import org.hamcrest.Matchers;
 import org.testng.annotations.Test;
-
-import com.requestObjectModel.GetUsersRequestSpec;
+import com.requestObjectModel.UserRequestSpec;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -14,8 +13,8 @@ import static org.testng.Assert.assertEquals;
 
 public class GetUsers {
 	
+	UserRequestSpec spec=new UserRequestSpec();
 	
-	GetUsersRequestSpec spec=new GetUsersRequestSpec();
 	@Test
 	public static void verifyResponseCodeForGetAllUsersWithValidMethodNameAndEndpoint() {
 		given()

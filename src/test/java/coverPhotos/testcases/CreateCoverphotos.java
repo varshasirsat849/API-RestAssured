@@ -16,10 +16,12 @@ import org.testng.annotations.Test;
 
 import com.pojo.CoverphotosRequestPOJO;
 import com.pojo.CreateUserRequestPOJO;
+import com.requestObjectModel.CoverphotosRequestSpec;
 
 import io.restassured.http.ContentType;
 
 public class CreateCoverphotos {
+	
 
 	@Test
 	public void verifyCreateCoverphotsWithValidDataWithJson() throws FileNotFoundException {
@@ -41,9 +43,9 @@ public class CreateCoverphotos {
 		.post("https://fakerestapi.azurewebsites.net/api/v1/CoverPhotos")
 		.then().log().all()
 		.assertThat()
-		.body("id",Matchers.equalTo(732))
-		.body("idBook",Matchers.equalTo(732))
-		.body("url",Matchers.equalTo("https://placeholdit.imgix.net/~text?txtsize=33&txt=Book 72&w=250&h=350"))
+		.body("id",Matchers.equalTo(7632))
+		.body("idBook",Matchers.equalTo(7632))
+		.body("url",Matchers.equalTo("https://placeholdit.imgix.net/~text?txtsize=33&txt=Book 7632&w=250&h=350"))
 		.body("size()", greaterThan(0))
 		.header("Content-Type", "application/json; charset=utf-8; v=1.0");
 	}
@@ -58,11 +60,32 @@ public class CreateCoverphotos {
 				+ "        \"url\": \"https://placeholdit.imgix.net/~text?txtsize=33&txt=Book 72&w=250&h=350\"\r\n"
 				+ "    }")
 		.contentType(ContentType.JSON)
-		.post("https://fakerestapi.azurewebsites.net/api/v1/CoverPhotos").then().log().all()
+		.post("https://fakerestapi.azurewebsites.net/api/v1/CoverPhotos")
+		.then().log().all()
 		.assertThat()
+		.body("id",Matchers.equalTo(7532))
+		.body("idBook",Matchers.equalTo(7532))
+		.body("url",Matchers.equalTo("https://placeholdit.imgix.net/~text?txtsize=33&txt=Book 72&w=250&h=350"))
+		.body("size()", greaterThan(0))
 		.header("Content-Type", "application/json; charset=utf-8; v=1.0")
 		.statusCode(200);
 
+	}
+	@Test
+	public void verifyCreateCoverphotosUsingRequestspec(){
+		CoverphotosRequestSpec spec=new CoverphotosRequestSpec();
+		given(spec.createCoverphotos())
+		.when()
+		.contentType(ContentType.JSON)
+		.post()
+		.then().log().all()
+		.assertThat()
+		.body("id",Matchers.equalTo(7532))
+		.body("idBook",Matchers.equalTo(7532))
+		.body("url",Matchers.equalTo("https://placeholdit.imgix.net/~text?txtsize=33&txt=Book 72&w=250&h=350"))
+		.body("size()", greaterThan(0))
+		.statusCode(200);
+		
 	}
 	@Test
 	public void verifyCreateCoverphotosUsingPOJOClass() {
